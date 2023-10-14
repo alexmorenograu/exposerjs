@@ -90,6 +90,9 @@ You can make the request /api/users/getUser and by code ctx.exposer.user.getUser
 ### ACLs TODO:
 
 Exposer has 3 ways to use ACLs to adapt to the needs of each project.
+
+```
 -FastACL: reads the ACLs from a JSON file: { }
 -CacheACL: generates a JSON file from the exposerACL table. It also deploys the necessary methods to add/modify/delete the ACL and regenerate the JSON.
 -DBACL: Reads the ACL from the exposerACL table. Table structure: model(Prisma model), aclType(type of acl. method or functionality), name(Prisma method, custom or \* for all), type(user or role), allow (username or role name)
+```
