@@ -36,7 +36,7 @@ exposer.run(app, PrismaClient);
 
 With the use of exposer.use({methodObject}), you can add custom routes.
 
-```json
+```js
 {
     Model*: is the Prisma model (table) to which the method will be added.
     Accepts: parameters to validate with AJV
@@ -44,7 +44,7 @@ With the use of exposer.use({methodObject}), you can add custom routes.
     http: (Add only if you want to deploy the route) information to lift the route.
         path: route that will be added to the model (users/getUser)
         verb: type of request (GET, POST, PUT, PATCH, DELETE)
-    [Method name]* method name
+    [Method name]*: method name
 }
 ```
 
