@@ -11,13 +11,13 @@ export default {
         },
         post: {
             create: '',
-            createMany: '',
         },
         put: {
             upsert: '',
         },
         patch: {
             update: '/:id',
+            updateMany: '/update',
         },
         delete: {
             delete: '/:id',

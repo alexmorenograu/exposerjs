@@ -1,9 +1,13 @@
+import 'colors';
 /* EXPOSER */
 import config from './config.js';
 import modelsRoutes from './src/modelsRoutes.js';
 import customRoutes from './src/customRoutes.js';
-import hooks from './src/hooks.js';
-import 'colors';
+// import hooks from './src/hooks.js';
+
+//middleware
+import notFound from './src/middleware/notFound.js';
+
 
 const customRoutesList = {}
 function use(method) {
@@ -18,32 +22,24 @@ function use(method) {
 
 
 function run(app, prismaClient, userConfig) {
+
+
+
     // get config
     let conf = Object.assign(config, userConfig);
-    const prismaInstance = new prismaClient();
+
     // custom routes
-    const exposerProxy = new Proxy({}, {
-        get: function (target, property) {
-            return new Proxy({ model: property }, {
-                get: function (target, property) {
-                    const model = target.model
-                    if (prismaInstance?.[model]?.[property]) return prismaInstance[model][property]
-                    return customRoutesList[model][property][property];
-                }
-            });
-        }
-    });
-    customRoutes(app, exposerProxy, customRoutesList);
+    customRoutes(app, prismaClient, customRoutesList);
 
     // routes /find, /create, etc
     modelsRoutes(app, prismaClient, conf);
 
     // triggers BETA
     //const exposer = hooks(prisma);
+
+    // NotFound middleware
     console.log('Exposer is running...'.bgCyan);
-    app.use(function (req, res) {
-        res.status(404).send('The requested route could not be found. Please verify your request and try again.');
-    });
+    app.use(notFound);
 };
 
 export default { use, run };

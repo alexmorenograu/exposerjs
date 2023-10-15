@@ -1,24 +1,24 @@
-export default (prisma) => {
-    return prisma.$extends({
-        query: {
-            $allModels: {
-                $allOperations({ model, operation, args, query }) {
-                    return prisma.$transaction(async (tx) => {
-                        if (true)
-                            console.log('CALL BEFORE TRIGGER');
-                        console.log(operation)
-                        const res = await tx[model][operation](args);
-                        if (true)
-                            console.log('CALL AFTER TRIGGER');
-                        return res;
-                    })
-                    //return query(args)
-                },
-            }
-        },
-        model: customMethods,
-    })
-}
+// export default (prisma) => {
+//     return prisma.$extends({
+//         query: {
+//             $allModels: {
+//                 $allOperations({ model, operation, args, query }) {
+//                     return prisma.$transaction(async (tx) => {
+//                         if (true)
+//                             console.log('CALL BEFORE TRIGGER');
+//                         console.log(operation)
+//                         const res = await tx[model][operation](args);
+//                         if (true)
+//                             console.log('CALL AFTER TRIGGER');
+//                         return res;
+//                     })
+//                     //return query(args)
+//                 },
+//             }
+//         },
+//         model: customMethods,
+//     })
+// }
 
 // const exposerHooks = {
 //     beforeSelect: (ctx, tx,) => console.log('this is a HOOK for SELECT'),

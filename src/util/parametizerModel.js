@@ -1,18 +1,19 @@
 export default (req, schema) => {
-    const queryParams = req?.query?.params
     let urlParams = req.params;
     if (urlParams && schema) {
-        for (param in urlParams) {
+        for (let param in urlParams) {
             if (schema.properties[param].type === 'integer')
-                param = Number(param)
+                urlParams[param] = Number(urlParams[param])
             if (schema.properties[param].type.includes('integer'))
-                urlParams[param] = Number(param)
+                urlParams[param] = Number(urlParams[param])
         }
+        urlParams = { where: urlParams }
     }
+
     return Object.assign({},
-        queryParams ? JSON.parse(queryParams) : {},
+        req?.query?.params && JSON.parse(req.query.params),
         req.body ?? {},
         req.data ?? {},
-        req.params ?? {}
+        urlParams
     )
 }
