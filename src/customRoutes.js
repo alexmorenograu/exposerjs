@@ -5,26 +5,28 @@ import BAD_REQUEST from "./errors/badRequest.js";
 import INTERNAL_ERROR from "./errors/internalError.js";
 
 const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+const list = {}
+let exposer;
 
-export default (app, prismaClient, customRoutes) => {
+function customRoutes(app, prismaClient) {
     // Generate exposer proxy
     const prismaInstance = new prismaClient();
-    const exposer = new Proxy({}, {
+    exposer = new Proxy({}, {
         get: function (target, property) {
             return new Proxy({ model: property }, {
                 get: function (target, property) {
                     const model = target.model
                     if (prismaInstance?.[model]?.[property]) return prismaInstance[model][property]
-                    return customRoutes[model][property][property];
+                    return list[model][property][property];
                 }
             });
         }
     });
 
     // Deploy custom routes
-    for (const model in customRoutes) {
-        for (const method in customRoutes[model]) {
-            const newMethod = customRoutes[model][method];
+    for (const model in list) {
+        for (const method in list[model]) {
+            const newMethod = list[model][method];
             if (!newMethod.http) continue
             const path = '/api/' + pluralize(newMethod.model) + newMethod.http.path ?? camelToSnakeCase(method)
             app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
@@ -35,7 +37,7 @@ export default (app, prismaClient, customRoutes) => {
                     validator(params, newMethod.accepts, BAD_REQUEST);
                     const response = await newMethod[method](
                         {
-                            accessUser: {},
+                            accessUser: exposer.user.tokenData(req.header('Authorization')),
                             exposer,
                             req,
                             res
@@ -61,3 +63,13 @@ export default (app, prismaClient, customRoutes) => {
         }
     }
 }
+
+function use(method) {
+    for (const prop in method) {
+        if (['model', 'accepts', 'returns', 'http'].includes(prop)) continue
+        list[method.model] = Object.assign({}, list[method.model], { [prop]: method })
+    }
+};
+
+
+export { customRoutes, use, list, exposer };

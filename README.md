@@ -6,7 +6,17 @@ It has the ability to use parameter validation (AJV), restriction checking (ACLs
 
 Dependencies: [Express, Prisma, AJV, jsonwebtoken]
 
-## Installation
+## Installation \*For now download and use.
+
+Add in package.json
+
+```
+"dependencies": {
+    "exposer": "file:[exposerPath]"
+}
+```
+
+### In future
 
 ```bash
 npm i exposer
@@ -122,12 +132,13 @@ Exposer has 3 ways to use ACLs to adapt to the needs of each project.
 ❌: Hooks
     ❌: Use or generate transaction
 
+✅: Token Validation
+
 ❌: ACLs Validation
     ❌: FastACL
     ❌: CacheACL
     ❌: DBACL
 
-❌: Token Validation
 ```
 
 ### Roadmap:
@@ -146,9 +157,19 @@ v0.0.2
     ✅: Parametizer
 
 v0.0.3
-🛠️: Token Validation
+✅: Token Validation
+    ✅: tokenVerify()
+    ✅: middleware tokenVerify()
+    ✅: signIn()
+    ✅: singUp()
 
 v0.0.4
+🛠️: Add test environment
+    🛠️: Route models
+    🛠️: Route customs
+    🛠️: Token Validation
+
+v0.0.5
 🛠️: ACLs Validation
     🛠️: FastACL
 ```

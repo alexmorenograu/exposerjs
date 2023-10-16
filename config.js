@@ -23,7 +23,9 @@ export default {
             delete: '/:id',
             deleteMany: '',
         }
-    }
+    },
+    tokenVerify: true,
+    tokenKey: 'EXPOSER_TOKEN_KEY',
 }
 
 // findUnique

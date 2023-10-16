@@ -2,37 +2,25 @@ import 'colors';
 /* EXPOSER */
 import config from './config.js';
 import modelsRoutes from './src/modelsRoutes.js';
-import customRoutes from './src/customRoutes.js';
-// import hooks from './src/hooks.js';
+import { customRoutes, use } from './src/customRoutes.js';
+import hooks from './src/hooks.js';
 
 //middleware
 import notFound from './src/middleware/notFound.js';
-
-
-const customRoutesList = {}
-function use(method) {
-    let methodName;
-    for (const prop in method)
-        if (!['model', 'accpets', 'returns', 'http'].includes(prop)) methodName = prop;
-
-    const newMethod = {}
-    newMethod[methodName] = method
-    customRoutesList[method.model] = Object.assign({}, customRoutesList[method.model], newMethod)
-};
+import tokenVerification from './src/middleware/tokenVerification.js';
 
 
 function run(app, prismaClient, userConfig) {
-
-
-
-    // get config
-    let conf = Object.assign(config, userConfig);
+    // Set config
+    global.CONFIG = Object.assign(config, userConfig);
+    // TokenVerification middleware
+    app.use(tokenVerification);
 
     // custom routes
-    customRoutes(app, prismaClient, customRoutesList);
+    customRoutes(app, prismaClient);
 
     // routes /find, /create, etc
-    modelsRoutes(app, prismaClient, conf);
+    modelsRoutes(app, prismaClient);
 
     // triggers BETA
     //const exposer = hooks(prisma);

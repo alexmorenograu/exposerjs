@@ -1,12 +1,10 @@
 import pluralize from 'pluralize';
-import validator from './util/validator.js';
 import parametizerModel from './util/parametizerModel.js';
 import schematizer from './util/schematizer.js';
 
-export default (app, prismaClient, conf) => {
-    const verbs = conf.verbs;
+export default (app, prismaClient) => {
+    const verbs = global.CONFIG.verbs;
     const prisma = new prismaClient();
-
 
     // PUSH PRISMA MODELS FUNCTIONS
     for (let model in prisma._runtimeDataModel.models) {
