@@ -165,11 +165,16 @@ v0.0.3
 
 v0.0.4
 🛠️: Add test environment
-    🛠️: Route models
+    ✅: Start local mariadb
+    ✅: Add structure and fixtures
+    ✅: Route models
+
+v0.0.5
+🛠️: Add test environment
     🛠️: Route customs
     🛠️: Token Validation
 
-v0.0.5
+v0.0.6
 🛠️: ACLs Validation
     🛠️: FastACL
 ```

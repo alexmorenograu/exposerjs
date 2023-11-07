@@ -31,7 +31,6 @@ export default (app, prismaClient) => {
                 app[verb](path, async (req, res) => {
                     const params = parametizerModel(req, schema);
                     // ACL validation
-                    // Token validation
                     console.log(JSON.parse(req?.query?.params || JSON.stringify({})),
                         req.body ?? {},
                         req.data ?? {},

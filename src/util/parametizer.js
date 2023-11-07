@@ -8,8 +8,17 @@ export default (req, schema) => {
                 urlParams[param] = Number(urlParams[param])
         }
     }
+    // console.log(req?.query?.params && JSON.parse(req.query.params),
+    //     req.body ?? {},
+    //     req.data ?? {},
+    //     urlParams)
 
-    return Object.assign({},
+    const properties = JSON.parse(JSON.stringify(schema?.properties)) ?? {}
+    for (let key in properties) {
+        properties[key] = undefined;
+    }
+
+    return Object.assign(properties,
         req?.query?.params && JSON.parse(req.query.params),
         req.body ?? {},
         req.data ?? {},

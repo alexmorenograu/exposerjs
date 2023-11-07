@@ -1,0 +1,18 @@
+# docker-compose.yml
+version: "3"
+services:
+  db:
+    build: .
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3305:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+}
+
+model acl {
+  id     Int      @id @default(autoincrement())
+  model  String   @db.VarChar(255)
+  method String   @db.VarChar(255)
+  type   acl_type @default(role)
+  name   String   @db.VarChar(255)
+}
+
+model role {
+  id                                          Int           @id @default(autoincrement())
+  name                                        String        @db.VarChar(255)
+  roleInherit_roleInherit_roleIdTorole        roleInherit[] @relation("roleInherit_roleIdTorole")
+  roleInherit_roleInherit_roleInheritIdTorole roleInherit[] @relation("roleInherit_roleInheritIdTorole")
+}
+
+model roleInherit {
+  roleId                               Int
+  roleInheritId                        Int
+  role_roleInherit_roleIdTorole        role @relation("roleInherit_roleIdTorole", fields: [roleId], references: [id], onUpdate: Restrict, map: "roleInherit_ibfk_1")
+  role_roleInherit_roleInheritIdTorole role @relation("roleInherit_roleInheritIdTorole", fields: [roleInheritId], references: [id], onUpdate: Restrict, map: "roleInherit_ibfk_2")
+
+  @@id([roleId, roleInheritId])
+  @@index([roleInheritId], map: "roleInheritId")
+}
+
+enum acl_type {
+  role
+  user
+}

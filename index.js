@@ -1,8 +1,10 @@
 import 'colors';
+import * as emoji from 'node-emoji';
+
 /* EXPOSER */
 import config from './config.js';
-import modelsRoutes from './src/modelsRoutes.js';
-import { customRoutes, use } from './src/customRoutes.js';
+import modelsRoutes from './src/modelRoutes.js';
+import { customRoutes, use, list } from './src/customRoutes.js';
 import hooks from './src/hooks.js';
 
 //middleware
@@ -11,6 +13,7 @@ import tokenVerification from './src/middleware/tokenVerification.js';
 
 
 function run(app, prismaClient, userConfig) {
+    const st = new Date()
     // Set config
     global.CONFIG = Object.assign(config, userConfig);
     // TokenVerification middleware
@@ -26,7 +29,8 @@ function run(app, prismaClient, userConfig) {
     //const exposer = hooks(prisma);
 
     // NotFound middleware
-    console.log('Exposer is running...'.bgCyan);
+    // console.log(list)
+    console.log(`Exposer deployed in ${new Date() - st}s ⚡`.bgCyan);
     app.use(notFound);
 };
 

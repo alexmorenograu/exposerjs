@@ -55,6 +55,7 @@ use({
             });
         });
 
-        return user;
+        delete user.password
+        return Object.assign(user, { token });
     }
 });

@@ -26,6 +26,5 @@ export default {
     },
     tokenVerify: true,
     tokenKey: 'EXPOSER_TOKEN_KEY',
+    // aclVerify: true
 }
-
-// findUnique

@@ -29,15 +29,15 @@ function customRoutes(app, prismaClient) {
             const newMethod = list[model][method];
             if (!newMethod.http) continue
             const path = '/api/' + pluralize(newMethod.model) + newMethod.http.path ?? camelToSnakeCase(method)
+            // console.log(path)
             app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
                 try {
                     const params = parametizer(req, newMethod.accepts);
                     // ACL validation
-                    // Token validation
                     validator(params, newMethod.accepts, BAD_REQUEST);
                     const response = await newMethod[method](
                         {
-                            accessUser: exposer.user.tokenData(req.header('Authorization')),
+                            accessUser: req.accessUser,
                             exposer,
                             req,
                             res

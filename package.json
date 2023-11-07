@@ -5,15 +5,24 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "node ./src/tests/server.js",
+        "db": "docker run -d --name exposerDb -e MYSQL_ROOT_PASSWORD=root -p 3305:3306 -d mariadb"
     },
     "author": "Alex Moreno",
     "license": "MIT",
     "dependencies": {
+        "@prisma/client": "^5.5.2",
         "bcrypt": "^5.1.1",
+        "child_process": "^1.0.2",
         "colors": "^1.4.0",
+        "concurrently": "^8.2.1",
+        "cors": "^2.8.5",
         "express": "^4.18.2",
         "jsonwebtoken": "^9.0.2",
+        "node-emoji": "^2.1.0",
         "pluralize": "^8.0.0"
+    },
+    "devDependencies": {
+        "prisma": "^5.5.2"
     }
 }

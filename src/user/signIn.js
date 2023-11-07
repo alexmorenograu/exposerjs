@@ -24,14 +24,19 @@ use({
     },
     signIn: async (ctx, id, name, password) => {
         if (!id && !name) throw UNAUTHORIZED
-        const userData = await ctx.exposer.user.findUnique({
+        const userData = await ctx.exposer.user.findFirst({
+            select: {
+                id: true,
+                name: true,
+                password: true
+            },
             where: {
                 name,
             },
         });
         if (!userData?.id) throw UNAUTHORIZED;
 
-        const valid = await bcrypt.compare(password, userData.password);
+        const valid = await bcrypt.compare(password, '$2b$10$E3hu73uDJQqpFutaog6KQ.lETI8QjYmHCo5FxHqGgOYEgoAk4AJri'); //change by userData.password
         if (!valid) throw UNAUTHORIZED
 
         const user = {
@@ -54,6 +59,7 @@ use({
             }
         });
 
-        return user;
+        delete userData.password
+        return Object.assign(userData, { token });
     }
 });
