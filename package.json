@@ -1,6 +1,6 @@
 {
-    "name": "exposer",
-    "version": "0.0.5",
+    "name": "exposerjs",
+    "version": "0.0.7",
     "description": "",
     "main": "index.js",
     "type": "module",

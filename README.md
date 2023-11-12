@@ -1,25 +1,15 @@
-# EXPOSER
+# ExposerJS
 
-EXPOSER is an API generator based on Express and Prisma. It deploys a route for each Prisma method.
+ExposerJS is an API generator based on Express and Prisma. It deploys a route for each Prisma method.
 It also allows you to add custom methods and deploy them in a simple way, providing everything you need.
 It has the ability to use parameter validation (AJV), restriction checking (ACLs), and token validation (jsonwebtoken).
 
 Dependencies: [Express, Prisma, AJV, jsonwebtoken]
 
-## Installation \*For now download and use.
-
-Add in package.json
-
-```
-"dependencies": {
-    "exposer": "file:[exposerPath]"
-}
-```
-
-### In future
+## Installation
 
 ```bash
-npm i exposer
+npm i exposerjs
 ```
 
 ## Usage
@@ -27,7 +17,7 @@ npm i exposer
 To start the API, you only need an instance of Express and Prisma:
 
 ```js
-import { exposer } from "exposer";
+import { exposer } from "exposerjs";
 
 //Express
 import express from "express";
@@ -61,7 +51,7 @@ With the use of exposer.use({methodObject}), you can add custom routes.
 (\*) required
 
 ```js
-import { exposer } from "exposer";
+import { exposer } from "exposerjs";
 
 exposer.use({
   model: "user",
@@ -81,7 +71,7 @@ exposer.use({
   getUser,
 });
 
-async function getUser(ctx) {
+async function getUser(ctx, id, name) {
   const user = await ctx.exposer.user.findUnique({
     select: {
       id: true,
@@ -91,7 +81,8 @@ async function getUser(ctx) {
       id: ctx.params.id,
     },
   });
-  console.log(ctx.params.id, "← name →", user.name);
+  console.log(id, "← id →", user.id);
+  console.log(name, "← name →", user.name);
 }
 ```
 
@@ -115,14 +106,17 @@ Exposer has 3 ways to use ACLs to adapt to the needs of each project.
 ```
 
 Global 'allows':
-Use '\*' for all roles
+
+```text
+Use '*' for all roles
 Use '$' for all (signIn, signUp, ...)
+```
 
 #### Add acls in code (FastACL):
 
 ```js
 // In method: add property 'allow'
-import { exposer } from "exposer";
+import { exposer } from "exposerjs";
 exposer.use({
   model: "myModel",
   accepts: {},
@@ -134,7 +128,7 @@ exposer.use({
 
 
 //In model:
-import { acl } from "exposer";
+import { acl } from "exposerjs";
 acl.addModel('myModel',
     [
         ['findMany', 'myRoleOne'],
@@ -155,12 +149,12 @@ acl.addModel('myModel',
     ✅: Primary key param
     ✅: Parametizer
     ❌: Unique Key param
-    ❌: ACLValidation
+    🛠️: ACLValidation
 🛠️: Route customs
     ✅: Validator Accepts(AJV)
     ✅: Validator Return(AJV)
     ✅: Parametizer
-    ❌: ACLValidation
+    🛠️: ACLValidation
 ❌: Hooks
     ❌: Use or generate transaction
 
@@ -206,10 +200,20 @@ v0.0.5
     ✅: FastACL
 
 v0.0.6
+✅: Fix readme for npm
+
+v0.0.7
+✅: Fix readme for npm
+
+v0.0.8
 🛠️: ACLs Validation
     🛠️: CacheACL
 
-v0.0.7
+v0.0.X
+🛠️: ACLs Validation
+    🛠️: DBACL
+
+v0.0.X
 🛠️: Add test environment
     🛠️: Route customs
     🛠️: Token Validation
