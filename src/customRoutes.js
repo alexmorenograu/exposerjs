@@ -1,6 +1,8 @@
 import pluralize from 'pluralize';
 import validator from './util/validator.js';
 import parametizer from './util/parametizer.js';
+import { addAcls, aclCheck } from './middleware/aclVerification.js';
+
 import BAD_REQUEST from "./errors/badRequest.js";
 import INTERNAL_ERROR from "./errors/internalError.js";
 
@@ -8,7 +10,7 @@ const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLow
 const list = {}
 let exposer;
 
-function customRoutes(app, prismaClient) {
+async function customRoutes(app, prismaClient) {
     // Generate exposer proxy
     const prismaInstance = new prismaClient();
     exposer = new Proxy({}, {
@@ -30,14 +32,17 @@ function customRoutes(app, prismaClient) {
             if (!newMethod.http) continue
             const path = '/api/' + pluralize(newMethod.model) + newMethod.http.path ?? camelToSnakeCase(method)
             // console.log(path)
-            app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
+            await app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
                 try {
+                    const accessUser = req.accessUser
+                    aclCheck(newMethod.model, method, accessUser.role);
+
                     const params = parametizer(req, newMethod.accepts);
-                    // ACL validation
                     validator(params, newMethod.accepts, BAD_REQUEST);
+
                     const response = await newMethod[method](
                         {
-                            accessUser: req.accessUser,
+                            accessUser,
                             exposer,
                             req,
                             res
@@ -51,7 +56,6 @@ function customRoutes(app, prismaClient) {
                     if (e.statusCode)
                         return res.status(e.statusCode).send(e);
                     return res.status(500).send(INTERNAL_ERROR);
-
                 }
 
             });
@@ -66,7 +70,13 @@ function customRoutes(app, prismaClient) {
 
 function use(method) {
     for (const prop in method) {
-        if (['model', 'accepts', 'returns', 'http'].includes(prop)) continue
+        if (['model', 'accepts', 'returns', 'http', 'allow'].includes(prop)) continue
+
+        if (method['allow']) {
+            for (const role of method['allow'])
+                addAcls([method['model'], prop, role])
+        }
+
         list[method.model] = Object.assign({}, list[method.model], { [prop]: method })
     }
 };

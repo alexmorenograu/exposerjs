@@ -1,8 +1,9 @@
 import pluralize from 'pluralize';
 import parametizerModel from './util/parametizerModel.js';
 import schematizer from './util/schematizer.js';
+import { aclCheck } from './middleware/aclVerification.js';
 
-export default (app, prismaClient) => {
+export default async (app, prismaClient) => {
     const verbs = global.CONFIG.verbs;
     const prisma = new prismaClient();
 
@@ -28,14 +29,15 @@ export default (app, prismaClient) => {
 
                 // Deploy route models
                 // console.log(path, verb, model, method)
-                app[verb](path, async (req, res) => {
+                await app[verb](path, async (req, res) => {
+                    aclCheck(model, method, req.accessUser.role);
                     const params = parametizerModel(req, schema);
                     // ACL validation
-                    console.log(JSON.parse(req?.query?.params || JSON.stringify({})),
-                        req.body ?? {},
-                        req.data ?? {},
-                        req.params ?? {})
-                    console.log('PARAMETIZER', params)
+                    // console.log(JSON.parse(req?.query?.params || JSON.stringify({})),
+                    //     req.body ?? {},
+                    //     req.data ?? {},
+                    //     req.params ?? {})
+                    // console.log('PARAMETIZER', params)
                     res.send(await prisma[model][method](params));
                 });
             }

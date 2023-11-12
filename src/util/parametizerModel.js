@@ -10,10 +10,15 @@ export default (req, schema) => {
         urlParams = { where: urlParams }
     }
 
-    return Object.assign({},
+    const params = Object.assign({},
         req?.query?.params && JSON.parse(req.query.params),
         req.body ?? {},
         req.data ?? {},
         urlParams
     )
+
+    if (params?.params && !Object.keys(params.params).length)
+        delete params.params
+
+    return params
 }

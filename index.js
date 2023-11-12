@@ -10,9 +10,10 @@ import hooks from './src/hooks.js';
 //middleware
 import notFound from './src/middleware/notFound.js';
 import tokenVerification from './src/middleware/tokenVerification.js';
+import { addModel } from './src/middleware/aclVerification.js';
 
 
-function run(app, prismaClient, userConfig) {
+async function run(app, prismaClient, userConfig) {
     const st = new Date()
     // Set config
     global.CONFIG = Object.assign(config, userConfig);
@@ -20,18 +21,21 @@ function run(app, prismaClient, userConfig) {
     app.use(tokenVerification);
 
     // custom routes
-    customRoutes(app, prismaClient);
+    await customRoutes(app, prismaClient);
 
     // routes /find, /create, etc
-    modelsRoutes(app, prismaClient);
+    await modelsRoutes(app, prismaClient);
 
     // triggers BETA
     //const exposer = hooks(prisma);
 
     // NotFound middleware
+    app.use(notFound);
     // console.log(list)
     console.log(`Exposer deployed in ${new Date() - st}s ⚡`.bgCyan);
-    app.use(notFound);
 };
 
-export default { use, run };
+import UserError from './src/errors/userError.js';
+const exposer = { use, run, UserError }
+const acl = { addModel }
+export { exposer, acl };

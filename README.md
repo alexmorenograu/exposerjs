@@ -27,7 +27,7 @@ npm i exposer
 To start the API, you only need an instance of Express and Prisma:
 
 ```js
-import exposer from "exposer";
+import { exposer } from "exposer";
 
 //Express
 import express from "express";
@@ -61,7 +61,7 @@ With the use of exposer.use({methodObject}), you can add custom routes.
 (\*) required
 
 ```js
-import exposer from "exposer";
+import { exposer } from "exposer";
 
 exposer.use({
   model: "user",
@@ -104,14 +104,46 @@ You can make the request (`/api/users/getUser?params=${params}`)
 In back-end
 await ctx.exposer.user.getUser(ctx, id, name)
 
-### ACLs TODO:
+### ACLs
 
 Exposer has 3 ways to use ACLs to adapt to the needs of each project.
 
 ```
--FastACL: reads the ACLs from a JSON file: { }
+-FastACL: reads the ACLs from code
 -CacheACL: generates a JSON file from the exposerACL table. It also deploys the necessary methods to add/modify/delete the ACL and regenerate the JSON.
 -DBACL: Reads the ACL from the exposerACL table. Table structure: model(Prisma model), aclType(type of acl. method or functionality), name(Prisma method, custom or \* for all), type(user or role), allow (username or role name)
+```
+
+Global 'allows':
+Use '\*' for all roles
+Use '$' for all (signIn, signUp, ...)
+
+#### Add acls in code (FastACL):
+
+```js
+// In method: add property 'allow'
+import { exposer } from "exposer";
+exposer.use({
+  model: "myModel",
+  accepts: {},
+  returns: {},
+  http: {},
+  allow: ['myRole'] // ← here
+  myMethod,
+});
+
+
+//In model:
+import { acl } from "exposer";
+acl.addModel('myModel',
+    [
+        ['findMany', 'myRoleOne'],
+        ['create', ['myRoleOne', 'myRoleTwo']]
+        ['upsert', '*']
+        ['myCustomMethod', '$']
+    ],
+);
+
 ```
 
 ## Exposer State:
@@ -134,8 +166,8 @@ Exposer has 3 ways to use ACLs to adapt to the needs of each project.
 
 ✅: Token Validation
 
-❌: ACLs Validation
-    ❌: FastACL
+🛠️: ACLs Validation
+    ✅: FastACL
     ❌: CacheACL
     ❌: DBACL
 
@@ -170,11 +202,16 @@ v0.0.4
     ✅: Route models
 
 v0.0.5
+🛠️: ACLs Validation
+    ✅: FastACL
+
+v0.0.6
+🛠️: ACLs Validation
+    🛠️: CacheACL
+
+v0.0.7
 🛠️: Add test environment
     🛠️: Route customs
     🛠️: Token Validation
 
-v0.0.6
-🛠️: ACLs Validation
-    🛠️: FastACL
 ```

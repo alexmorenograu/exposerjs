@@ -18,10 +18,15 @@ export default (req, schema) => {
         properties[key] = undefined;
     }
 
-    return Object.assign(properties,
+    const params = Object.assign(properties,
         req?.query?.params && JSON.parse(req.query.params),
         req.body ?? {},
         req.data ?? {},
         urlParams
     )
+
+    if (params?.params && !Object.keys(params.params).length)
+        delete params.params
+
+    return params
 }

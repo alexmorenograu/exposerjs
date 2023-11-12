@@ -18,6 +18,7 @@ use({
     returns: {
         type: "object"
     },
+    allow: '$',
     http: {
         path: `/signIn`,
         verb: 'GET'

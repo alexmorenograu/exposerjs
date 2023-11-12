@@ -17,6 +17,7 @@ use({
     returns: {
         type: "object"
     },
+    allow: '$',
     http: {
         path: `/signUp`,
         verb: 'POST'

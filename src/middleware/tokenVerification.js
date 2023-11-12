@@ -10,7 +10,7 @@ export default async (req, res, next) => {
         return next();
     }
     if (['/api/users/signIn', '/api/users/signUp'].includes(req.originalUrl.split('?')[0])) return next()
-    const token = req.header('Authorization')
+    const token = req?.query?.token ?? req.header('Authorization')
 
     try {
         req.accessUser = await tokenVerify({ exposer }, token)
@@ -26,10 +26,6 @@ export default async (req, res, next) => {
 use({
     model: 'user',
     tokenData,
-});
-
-use({
-    model: 'user',
     tokenVerify
 });
 
