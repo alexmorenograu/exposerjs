@@ -12,14 +12,13 @@
     "license": "MIT",
     "dependencies": {
         "@prisma/client": "^5.5.2",
+        "ajv": "^8.12.0",
         "bcrypt": "^5.1.1",
         "child_process": "^1.0.2",
         "colors": "^1.4.0",
-        "concurrently": "^8.2.2",
         "cors": "^2.8.5",
         "express": "^4.18.2",
         "jsonwebtoken": "^9.0.2",
-        "node-emoji": "^2.1.0",
         "pluralize": "^8.0.0"
     },
     "devDependencies": {

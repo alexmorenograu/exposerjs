@@ -4,12 +4,12 @@ ExposerJS is an API generator based on Express and Prisma. It deploys a route fo
 It also allows you to add custom methods and deploy them in a simple way, providing everything you need.
 It has the ability to use parameter validation (AJV), restriction checking (ACLs), and token validation (jsonwebtoken).
 
-Dependencies: [Express, Prisma, AJV, jsonwebtoken]
+Required dependencies: [Express, Prisma]
 
 ## Installation
 
 ```bash
-npm i exposerjs
+$ npm i exposerjs
 ```
 
 ## Usage

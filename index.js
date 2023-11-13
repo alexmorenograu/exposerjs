@@ -1,5 +1,4 @@
 import 'colors';
-import * as emoji from 'node-emoji';
 
 /* EXPOSER */
 import config from './config.js';

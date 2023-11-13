@@ -1,6 +1,9 @@
 # Change Log
 
 ```
+v0.0.9
+✅: Fix package.json dependencies
+
 v0.0.8
 ✅: Fix role bugs
 
@@ -56,5 +59,8 @@ v0.0.X
     🛠️: Route customs
     🛠️: Token Validation
     🛠️: ACL Validation
+
+v0.0.X
+🛠️: Deploy without express instance
 
 ```
