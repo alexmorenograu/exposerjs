@@ -22,6 +22,7 @@ import { exposer } from "exposerjs";
 //Express
 import express from "express";
 const app = express();
+const port = process.env.PORT || 3000;
 
 //Prisma
 import { PrismaClient } from "@prisma/client";
@@ -29,7 +30,55 @@ import { PrismaClient } from "@prisma/client";
 //Import custom routes
 import myCustomMethod from "../methods/myCustomMethod";
 
-exposer.run(app, PrismaClient);
+exposer.run(app, PrismaClient); //you can add a third parameter like user configs
+
+app.listen(port, () => {
+  console.log(`Backend is ready ${port}`);
+});
+```
+
+### Default config
+
+```js
+export default {
+  prefix: "/api",
+  verbs: {
+    get: {
+      findUnique: "/:id",
+      findMany: "",
+      findFirst: "/first",
+      count: "/count",
+      aggregate: "/aggregate",
+      groupBy: "/groupBy",
+    },
+    post: {
+      create: "",
+    },
+    put: {
+      upsert: "",
+    },
+    patch: {
+      update: "/:id",
+      updateMany: "/update",
+    },
+    delete: {
+      delete: "/:id",
+      deleteMany: "",
+    },
+  },
+  tokenVerify: true,
+  tokenKey: "EXPOSER_TOKEN_KEY",
+  aclVerify: true,
+  userModel: {
+    roleId: "roleId",
+    defaultRoleId: 1,
+  },
+  roleModel: {
+    tableName: "role",
+    id: "id",
+    name: "name",
+  },
+};
 ```
 
 ### Adding Custom Routes
@@ -164,58 +213,5 @@ acl.addModel('myModel',
     ✅: FastACL
     ❌: CacheACL
     ❌: DBACL
-
-```
-
-### Roadmap:
-
-```
-v0.0.1
-✅: Start proyect
-
-v0.0.2
-✅: Route customs
-    ✅: Validator Accepts(AJV)
-    ✅: Validator Return(AJV)
-    ✅: Parametizer
-✅: Route models
-    ✅: Primary key param
-    ✅: Parametizer
-
-v0.0.3
-✅: Token Validation
-    ✅: tokenVerify()
-    ✅: middleware tokenVerify()
-    ✅: signIn()
-    ✅: singUp()
-
-v0.0.4
-🛠️: Add test environment
-    ✅: Start local mariadb
-    ✅: Add structure and fixtures
-    ✅: Route models
-
-v0.0.5
-🛠️: ACLs Validation
-    ✅: FastACL
-
-v0.0.6
-✅: Fix readme for npm
-
-v0.0.7
-✅: Fix readme for npm
-
-v0.0.8
-🛠️: ACLs Validation
-    🛠️: CacheACL
-
-v0.0.X
-🛠️: ACLs Validation
-    🛠️: DBACL
-
-v0.0.X
-🛠️: Add test environment
-    🛠️: Route customs
-    🛠️: Token Validation
 
 ```

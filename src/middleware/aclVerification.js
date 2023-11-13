@@ -5,8 +5,8 @@ import UNAUTHORIZED from '../errors/unauthorized.js';
 const aclList = new Map();
 
 function aclCheck(model, name, role) {
+    if (!global.CONFIG.aclVerify) return
     // console.log(aclList)
-    role = '*' //REMOVE TODO:
     const aclModel = aclList.get(model);
     if (!aclModel) throw UNAUTHORIZED;
 
@@ -23,13 +23,6 @@ function addAcls(acls) {
     if (typeof acls !== 'object') return; //throw
 
     if (!Array.isArray(acls)) { //is object
-        // if (acls.role == '*') {
-        //     for (const role of Array.from(roleList)) {
-        //         addAcls({ model: acls.model, name: acls.name, role })
-        //     }
-        //     return
-        // }
-
         const model = aclList.get(acls.model) || new Map();
         const method = model.get(acls.name) || new Set();
 

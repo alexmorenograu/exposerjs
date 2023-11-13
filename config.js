@@ -26,5 +26,14 @@ export default {
     },
     tokenVerify: true,
     tokenKey: 'EXPOSER_TOKEN_KEY',
-    // aclVerify: true
+    aclVerify: true,
+    userModel: {
+        roleId: 'roleId',
+        defaultRoleId: 1
+    },
+    roleModel: {
+        tableName: 'role',
+        id: 'id',
+        name: 'name'
+    }
 }

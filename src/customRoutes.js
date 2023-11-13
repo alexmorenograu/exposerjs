@@ -12,6 +12,7 @@ let exposer;
 
 async function customRoutes(app, prismaClient) {
     // Generate exposer proxy
+    const config = global.CONFIG;
     const prismaInstance = new prismaClient();
     exposer = new Proxy({}, {
         get: function (target, property) {
@@ -30,12 +31,12 @@ async function customRoutes(app, prismaClient) {
         for (const method in list[model]) {
             const newMethod = list[model][method];
             if (!newMethod.http) continue
-            const path = '/api/' + pluralize(newMethod.model) + newMethod.http.path ?? camelToSnakeCase(method)
+            const path = config.prefix + '/' + pluralize(newMethod.model) + newMethod.http.path ?? camelToSnakeCase(method)
             // console.log(path)
             await app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
                 try {
-                    const accessUser = req.accessUser
-                    aclCheck(newMethod.model, method, accessUser.role);
+                    const accessUser = req?.accessUser;
+                    aclCheck(newMethod.model, method, accessUser?.role);
 
                     const params = parametizer(req, newMethod.accepts);
                     validator(params, newMethod.accepts, BAD_REQUEST);

@@ -32,7 +32,7 @@ async function run(app, prismaClient, userConfig) {
     // NotFound middleware
     app.use(notFound);
     // console.log(list)
-    console.log(`Exposer deployed in ${new Date() - st}s ⚡`.bgCyan);
+    console.log(`ExposerJS deployed in ${new Date() - st}s ⚡`.bgCyan);
 };
 
 import UserError from './src/errors/userError.js';

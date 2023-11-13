@@ -25,11 +25,10 @@ use({
     },
     signIn: async (ctx, id, name, password) => {
         if (!id && !name) throw UNAUTHORIZED
+        const config = global.CONFIG;
         const userData = await ctx.exposer.user.findFirst({
-            select: {
-                id: true,
-                name: true,
-                password: true
+            include: {
+                [config.roleModel.tableName]: true
             },
             where: {
                 name,
@@ -37,12 +36,13 @@ use({
         });
         if (!userData?.id) throw UNAUTHORIZED;
 
-        const valid = await bcrypt.compare(password, '$2b$10$E3hu73uDJQqpFutaog6KQ.lETI8QjYmHCo5FxHqGgOYEgoAk4AJri'); //change by userData.password
+        const valid = await bcrypt.compare(password, userData.password);
         if (!valid) throw UNAUTHORIZED
 
         const user = {
             id: userData.id,
             name: userData.name,
+            role: userData[config.roleModel.tableName].name
         }
         const token = jwt.sign(user, global.CONFIG.tokenKey, { algorithm: 'HS256' });
 
@@ -60,7 +60,6 @@ use({
             }
         });
 
-        delete userData.password
-        return Object.assign(userData, { token });
+        return Object.assign(user, { token });
     }
 });

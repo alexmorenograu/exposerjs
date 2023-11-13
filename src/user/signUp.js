@@ -43,6 +43,7 @@ use({
             user = {
                 id: userData.id,
                 name,
+                role: global.CONFIG.userModel.defaultRoleId
             }
 
             const token = jwt.sign(user, global.CONFIG.tokenKey, { algorithm: 'HS256' });
