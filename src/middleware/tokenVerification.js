@@ -42,7 +42,6 @@ async function tokenVerify(ctx, token) {
     const userData = await ctx.exposer.user.findUnique({
         select: {
             id: true,
-            // role: true
         },
         where: {
             id: tokenData.id

@@ -1,5 +1,6 @@
 export default {
     prefix: '/api',
+    port: 3000,
     verbs: {
         get: {
             findUnique: '/:id',

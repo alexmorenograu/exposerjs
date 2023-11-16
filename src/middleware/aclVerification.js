@@ -1,12 +1,9 @@
-import { use } from '../customRoutes.js';
 import UNAUTHORIZED from '../errors/unauthorized.js';
-
-// const roleList = new Set(['developer', 'basic']); // get from db
 const aclList = new Map();
 
 function aclCheck(model, name, role) {
     if (!global.CONFIG.aclVerify) return
-    // console.log(aclList)
+
     const aclModel = aclList.get(model);
     if (!aclModel) throw UNAUTHORIZED;
 

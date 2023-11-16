@@ -1,17 +1,20 @@
 # Change Log
 
 ```
+v0.0.10
+✅: Feat: Express cease to be mandatory parameter
+
 v0.0.9
-✅: Fix package.json dependencies
+✅: Fix: package.json dependencies
 
 v0.0.8
-✅: Fix role bugs
+✅: Fix: role bugs
 
 v0.0.7
-✅: Fix readme for npm
+✅: Fix: readme for npm
 
 v0.0.6
-✅: Fix readme for npm
+✅: Fix: readme for npm
 
 v0.0.5
 🛠️: ACLs Validation
