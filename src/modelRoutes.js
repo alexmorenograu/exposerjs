@@ -1,22 +1,21 @@
 import pluralize from 'pluralize';
 import parametizerModel from './util/parametizerModel.js';
-import schematizer from './util/schematizer.js';
 import { aclCheck } from './middleware/aclVerification.js';
 
-export default async (app, prismaClient) => {
+export default async (app) => {
     const verbs = global.CONFIG.verbs;
-    const prisma = new prismaClient();
+    const orm = global.ORM;
 
-    // PUSH PRISMA MODELS FUNCTIONS
-    for (let model in prisma._runtimeDataModel.models) {
+    // PUSH MODELS FUNCTIONS
+    for (let model in orm.runtimeModels) {
         for (let verb in verbs) {
             for (let method in verbs[verb]) {
                 let path = `${global.CONFIG.prefix}/${pluralize(model)}${verbs[verb][method]}`
                 let schema;
                 if (path.includes(':id')) {
-                    const primaryKeys = prisma._runtimeDataModel.models[model].fields.filter(field => field.isId)
+                    const primaryKeys = orm.runtimeModels[model].fields.filter(field => field.isId)
                     const pkNames = primaryKeys.map(ids => ids.name)
-                    schema = schematizer(primaryKeys);
+                    schema = orm.schematizer(primaryKeys);
                     path = path.replace(':id', `:${pkNames.join('/:')}`)
                 }
                 // console.log(prisma._runtimeDataModel.models[model])
@@ -31,7 +30,7 @@ export default async (app, prismaClient) => {
                 await app[verb](path, async (req, res) => {
                     aclCheck(model, method, req?.accessUser?.role);
                     const params = parametizerModel(req, schema);
-                    res.send(await prisma[model][method](params));
+                    res.send(await orm.models[model][method](params));
                 });
             }
         }

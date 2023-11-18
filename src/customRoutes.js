@@ -10,16 +10,15 @@ const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLow
 const list = {}
 let exposer;
 
-async function customRoutes(app, prismaClient) {
+async function customRoutes(app) {
     // Generate exposer proxy
     const config = global.CONFIG;
-    const prismaInstance = new prismaClient();
     exposer = new Proxy({}, {
         get: function (target, property) {
             return new Proxy({ model: property }, {
                 get: function (target, property) {
                     const model = target.model
-                    if (prismaInstance?.[model]?.[property]) return prismaInstance[model][property]
+                    if (global.ORM.models?.[model]?.[property]) return global.ORM.models[model][property]
                     return list[model][property][property];
                 }
             });
@@ -30,9 +29,10 @@ async function customRoutes(app, prismaClient) {
     for (const model in list) {
         for (const method in list[model]) {
             const newMethod = list[model][method];
+
             if (!newMethod.http) continue
             const path = config.prefix + '/' + pluralize(newMethod.model) + newMethod.http.path ?? camelToSnakeCase(method)
-            // console.log(path)
+
             await app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
                 try {
                     const accessUser = req?.accessUser;

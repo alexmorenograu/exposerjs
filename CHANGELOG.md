@@ -1,20 +1,25 @@
 # Change Log
 
 ```
+v0.1.0 prepare for multiple orm version
+    ✅: Feat: Create exposerjs-orm-prisma
+    ✅: Feat: Prisma decoupling from the core
+    ✅: Feat: Use exposerjs-orm-prisma by default
+
 v0.0.10
-✅: Feat: Express cease to be mandatory parameter
+    ✅: Feat: Express cease to be mandatory parameter
 
 v0.0.9
-✅: Fix: package.json dependencies
+    ✅: Fix: package.json dependencies
 
 v0.0.8
-✅: Fix: role bugs
+    ✅: Fix: role bugs
 
 v0.0.7
-✅: Fix: readme for npm
+    ✅: Fix: readme for npm
 
 v0.0.6
-✅: Fix: readme for npm
+    ✅: Fix: readme for npm
 
 v0.0.5
 🛠️: ACLs Validation

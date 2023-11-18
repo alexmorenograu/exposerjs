@@ -4,7 +4,8 @@ ExposerJS is an API generator based on Express and Prisma. It deploys a route fo
 It also allows you to add custom methods and deploy them in a simple way, providing everything you need.
 It has the ability to use parameter validation (AJV), restriction checking (ACLs), and token validation (jsonwebtoken).
 
-Required dependencies: [Express, Prisma]
+Supported Frameworks: [Express]
+Supported ORMs: [Prisma]
 
 ## Installation
 
@@ -15,22 +16,34 @@ $ npm i exposerjs
 ## Usage
 
 To start the API, you only need an instance of Express and Prisma:
+exposer.run(\*[Prisma instance], [Express instance], [UserConfig // object])
 
 ```js
 import { exposer } from "exposerjs";
+//Prisma
+import { PrismaClient } from "@prisma/client";
+//Import custom routes
+import myCustomMethod from "../methods/myCustomMethod";
+
+exposer.run(PrismaClient); //you can add a third parameter like user configs
+```
+
+With Express instance
+
+```js
+import { exposer } from "exposerjs";
+//Prisma
+import { PrismaClient } from "@prisma/client";
 
 //Express
 import express from "express";
 const app = express();
 const port = process.env.PORT || 3000;
 
-//Prisma
-import { PrismaClient } from "@prisma/client";
-
 //Import custom routes
 import myCustomMethod from "../methods/myCustomMethod";
 
-exposer.run(app, PrismaClient); //you can add a third parameter like user configs
+exposer.run(PrismaClient, app); //you can add a third parameter like user configs
 
 app.listen(port, () => {
   console.log(`Backend is ready ${port}`);
