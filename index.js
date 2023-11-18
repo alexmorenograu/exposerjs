@@ -9,7 +9,7 @@ import hooks from './src/hooks.js';
 //Middlewares
 import notFound from './src/middleware/notFound.js';
 import UserError from './src/errors/userError.js';
-import { addModel } from './src/middleware/aclVerification.js';
+import { addModel } from './src/acl/aclVerification.js';
 import tokenVerification from './src/middleware/tokenVerification.js';
 
 //Express
@@ -61,10 +61,8 @@ async function run(prismaClient, app, userConfig) {
 
 function useUser() {
     const methods = { signUp, signIn, tokenVerify: { model: 'user' } };
-    for (const method in methods) {
+    for (const method in methods)
         use(Object.assign(methods[method], { [method]: global.ORM.user[method] }))
-    }
-
 }
 
 

@@ -1,7 +1,7 @@
 import pluralize from 'pluralize';
 import validator from './util/validator.js';
 import parametizer from './util/parametizer.js';
-import { addAcls, aclCheck } from './middleware/aclVerification.js';
+import { addAcls, aclCheck } from './acl/aclVerification.js';
 
 import BAD_REQUEST from "./errors/badRequest.js";
 import INTERNAL_ERROR from "./errors/internalError.js";
@@ -80,6 +80,7 @@ function use(method) {
 
         list[method.model] = Object.assign({}, list[method.model], { [prop]: method })
     }
+    return list
 };
 
 

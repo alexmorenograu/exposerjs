@@ -1,6 +1,6 @@
 import pluralize from 'pluralize';
 import parametizerModel from './util/parametizerModel.js';
-import { aclCheck } from './middleware/aclVerification.js';
+import { aclCheck } from './acl/aclVerification.js';
 
 export default async (app) => {
     const verbs = global.CONFIG.verbs;
@@ -18,13 +18,6 @@ export default async (app) => {
                     schema = orm.schematizer(primaryKeys);
                     path = path.replace(':id', `:${pkNames.join('/:')}`)
                 }
-                // console.log(prisma._runtimeDataModel.models[model])
-                //TODO:
-                // if (path.includes(':uniqueFields')) {
-                //     const uniqueFields = prisma._runtimeDataModel.models[model].uniqueFields
-                //     path.replace(':primaryKey', `:${primaryKeys.join('&')}`)
-                // }
-
 
                 // Deploy route models
                 await app[verb](path, async (req, res) => {

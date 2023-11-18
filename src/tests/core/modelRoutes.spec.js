@@ -1,8 +1,9 @@
 import { describe, it, before, mock } from "node:test";
 import assert from 'node:assert/strict';
-import modelsRoutes from "../modelRoutes.js";
+import modelsRoutes from "../../modelRoutes.js";
 import { PrismaClient } from '@prisma/client';
-import config from '../../config.js';
+import config from '../../../config.js';
+import { exporter } from 'exposerjs-orm-prisma';
 // import { app } from "./server.js";
 
 describe('modelsRoutes', async () => {
@@ -15,6 +16,7 @@ describe('modelsRoutes', async () => {
     }
     before(() => {
         global.CONFIG = Object.assign(config);
+        global.ORM = exporter(PrismaClient)
         mock.method(app, 'get', () => { });
         mock.method(app, 'post', () => { });
         mock.method(app, 'put', () => { });
@@ -23,7 +25,7 @@ describe('modelsRoutes', async () => {
     });
 
     it('Should be as many calls as there are methods in the config', async () => {
-        await modelsRoutes(app, PrismaClient)
+        await modelsRoutes(app)
 
         assert.equal(app.get.mock.calls.length, Object.values(config.verbs.get).length);
         assert.equal(app.get.mock.calls[0].arguments[0], '/api/users/:id');
