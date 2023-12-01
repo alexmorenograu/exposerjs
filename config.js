@@ -28,6 +28,7 @@ export default {
     tokenVerify: true,
     tokenKey: 'EXPOSER_TOKEN_KEY',
     aclVerify: true,
+    aclType: 'fast',
     userModel: {
         roleId: 'roleId',
         defaultRoleId: 1
@@ -36,5 +37,11 @@ export default {
         tableName: 'role',
         id: 'id',
         name: 'name'
+    },
+    aclModel: {
+        tableName: 'acls',
+        model: 'model',
+        name: 'name',
+        allow: 'allow',
     }
 }

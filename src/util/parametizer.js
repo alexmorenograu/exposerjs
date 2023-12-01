@@ -12,8 +12,7 @@ export default (req, schema) => {
     //     req.body ?? {},
     //     req.data ?? {},
     //     urlParams)
-
-    const properties = JSON.parse(JSON.stringify(schema?.properties)) ?? {}
+    const properties = JSON.parse(JSON.stringify(schema?.properties ?? {}));
     for (let key in properties) {
         properties[key] = undefined;
     }

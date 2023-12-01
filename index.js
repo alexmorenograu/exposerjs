@@ -1,28 +1,33 @@
 import 'colors';
 
-/* EXPOSER */
+///ExposerJS
 import config from './config.js';
 import modelsRoutes from './src/modelRoutes.js';
 import { customRoutes, use, list } from './src/customRoutes.js';
 import hooks from './src/hooks.js';
 
-//middleware
+//Middlewares
 import notFound from './src/middleware/notFound.js';
 import UserError from './src/errors/userError.js';
+import { addModel } from './src/acl/aclVerification.js';
 import tokenVerification from './src/middleware/tokenVerification.js';
-import { addModel } from './src/middleware/aclVerification.js';
+import useUser from './src/user/useUser.js';
+import useAcl from './src/acl/useAcl.js';
 
-//express
+//Express
 import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 
+//Default ORM [Prisma]
+import { exporter } from 'exposerjs-orm-prisma';
 
-async function run(app, prismaClient, userConfig) {
+async function run(prismaClient, app, userConfig) {
+    if (!prismaClient) throw new Error('Prisma is required!');
+
     const st = new Date();
     const hasExpress = app ? true : false
     global.CONFIG = Object.assign(config, userConfig);
-
-    if (!prismaClient) throw new Error('Prisma is required!');
+    global.ORM = exporter(prismaClient)
 
     if (!hasExpress) {
         app = express()
@@ -30,24 +35,18 @@ async function run(app, prismaClient, userConfig) {
         app.use(json());
         app.use(urlencoded({ extended: true }));
     }
-    // Set config
-    // TokenVerification middleware
+
+    useUser();
     app.use(tokenVerification);
 
-    // custom routes
-    await customRoutes(app, prismaClient);
+    await customRoutes(app);
+    await modelsRoutes(app);
+    await useAcl();
 
-    // routes /find, /create, etc
-    await modelsRoutes(app, prismaClient);
-
-    // triggers BETA
-    //const exposer = hooks(prisma);
-
-    // NotFound middleware
+    //triggers BETA //const exposer = hooks(prisma);
     app.use(notFound);
-    // console.log(list)
 
-    console.log(`ExposerJS deployed in ${new Date() - st}s ⚡`.bgCyan);
+    console.log(`ExposerJS deployed in ${new Date() - st}ms ⚡`.bgCyan);
     if (!hasExpress) {
         return app.listen(global.CONFIG.port, () => {
             console.log(`BackEnd is listen at port ${global.CONFIG.port}`.bgGreen);

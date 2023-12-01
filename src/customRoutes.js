@@ -1,7 +1,8 @@
 import pluralize from 'pluralize';
 import validator from './util/validator.js';
 import parametizer from './util/parametizer.js';
-import { addAcls, aclCheck } from './middleware/aclVerification.js';
+import { addAcls, aclCheck } from './acl/aclVerification.js';
+import { getAcls } from './acl/dbImport.js';
 
 import BAD_REQUEST from "./errors/badRequest.js";
 import INTERNAL_ERROR from "./errors/internalError.js";
@@ -10,16 +11,15 @@ const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLow
 const list = {}
 let exposer;
 
-async function customRoutes(app, prismaClient) {
+async function customRoutes(app) {
     // Generate exposer proxy
     const config = global.CONFIG;
-    const prismaInstance = new prismaClient();
     exposer = new Proxy({}, {
         get: function (target, property) {
             return new Proxy({ model: property }, {
                 get: function (target, property) {
                     const model = target.model
-                    if (prismaInstance?.[model]?.[property]) return prismaInstance[model][property]
+                    if (global.ORM.models?.[model]?.[property]) return global.ORM.models[model][property]
                     return list[model][property][property];
                 }
             });
@@ -30,11 +30,13 @@ async function customRoutes(app, prismaClient) {
     for (const model in list) {
         for (const method in list[model]) {
             const newMethod = list[model][method];
+
             if (!newMethod.http) continue
             const path = config.prefix + '/' + pluralize(newMethod.model) + newMethod.http.path ?? camelToSnakeCase(method)
-            // console.log(path)
+
             await app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
                 try {
+                    if (global.CONFIG.aclType == 'db') await getAcls({ exposer }, global.CONFIG);
                     const accessUser = req?.accessUser;
                     aclCheck(newMethod.model, method, accessUser?.role);
 
@@ -80,6 +82,7 @@ function use(method) {
 
         list[method.model] = Object.assign({}, list[method.model], { [prop]: method })
     }
+    return list
 };
 
 
