@@ -176,11 +176,12 @@ Select mode in config.js → aclType
 -DB: Reads the ACL from the exposerACL table. Table structure: model(Prisma model), name(Prisma method, custom), allow (username or role name)
 ```
 
-| | fast | fast&db | cache | db |
-| Get acls from code | ✅ | ✅ | ✅ | ✅ |
-| Get acls from db when it starts | ❌ | ✅ | ✅ | ❌ |  
-| Implement routes to get the acls again | ❌ | ❌ | ✅ | ❌ |
-| Get acls for each request | ❌ | ❌ | ❌ | ✅ |
+|                                        | fast | fast&db | cache | db  |
+| -------------------------------------- | ---- | ------- | ----- | --- |
+| Get acls from code                     | ✅   | ✅      | ✅    | ✅  |
+| Get acls from db when it starts        | ❌   | ✅      | ✅    | ❌  |
+| Implement routes to get the acls again | ❌   | ❌      | ✅    | ❌  |
+| Get acls for each request              | ❌   | ❌      | ❌    | ✅  |
 
 Global 'allows':
 
