@@ -1,5 +1,17 @@
 import UNAUTHORIZED from '../errors/unauthorized.js';
-const aclList = new Map();
+let aclList = new Map();
+
+function setAclList(newAclList) {
+    aclList = newAclList
+}
+
+function getAclList() {
+    return aclList;
+}
+
+function dropAcls() {
+    return aclList.clear();
+}
 
 function aclCheck(model, name, role) {
     if (!global.CONFIG.aclVerify) return
@@ -44,5 +56,5 @@ function addModel(model, acls) {
     }
 }
 
-export { addAcls, addModel, aclCheck };
+export { addAcls, addModel, aclCheck, getAclList, setAclList, dropAcls };
 

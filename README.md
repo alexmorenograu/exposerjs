@@ -82,6 +82,7 @@ export default {
   tokenVerify: true,
   tokenKey: "EXPOSER_TOKEN_KEY",
   aclVerify: true,
+  aclType: "fast", // ['fast', 'cache', 'db']
   userModel: {
     roleId: "roleId",
     defaultRoleId: 1,
@@ -90,6 +91,12 @@ export default {
     tableName: "role",
     id: "id",
     name: "name",
+  },
+  aclModel: {
+    tableName: "acls",
+    model: "model",
+    name: "name",
+    allow: "allow",
   },
 };
 ```
@@ -160,12 +167,20 @@ await ctx.exposer.user.getUser(ctx, id, name)
 ### ACLs
 
 Exposer has 3 ways to use ACLs to adapt to the needs of each project.
+Select mode in config.js → aclType
 
 ```
--FastACL: reads the ACLs from code
--CacheACL: generates a JSON file from the exposerACL table. It also deploys the necessary methods to add/modify/delete the ACL and regenerate the JSON.
--DBACL: Reads the ACL from the exposerACL table. Table structure: model(Prisma model), aclType(type of acl. method or functionality), name(Prisma method, custom or \* for all), type(user or role), allow (username or role name)
+-Fast: Reads the ACLs from code
+-Fast&DB: Reads the ACLs from code and when start get from db
+-Cache: Cached from db. It also deploys the necessary methods to add/modify/delete the ACL and recache.
+-DB: Reads the ACL from the exposerACL table. Table structure: model(Prisma model), name(Prisma method, custom), allow (username or role name)
 ```
+
+| | fast | fast&db | cache | db |
+| Get acls from code | ✅ | ✅ | ✅ | ✅ |
+| Get acls from db when it starts | ❌ | ✅ | ✅ | ❌ |  
+| Implement routes to get the acls again | ❌ | ❌ | ✅ | ❌ |
+| Get acls for each request | ❌ | ❌ | ❌ | ✅ |
 
 Global 'allows':
 
@@ -209,22 +224,31 @@ acl.addModel('myModel',
 ```
 🛠️: Route models
     ✅: Primary key param
-    ✅: Parametizer
     ❌: Unique Key param
-    🛠️: ACLValidation
+    ✅: Parametizer
+    ✅: ACLValidation
+
 🛠️: Route customs
     ✅: Validator Accepts(AJV)
     ✅: Validator Return(AJV)
     ✅: Parametizer
-    🛠️: ACLValidation
-❌: Hooks
-    ❌: Use or generate transaction
+    ✅: ACLValidation
 
 ✅: Token Validation
 
+❌: Hooks
+    ❌: Use or generate transaction
+
 🛠️: ACLs Validation
-    ✅: FastACL
-    ❌: CacheACL
-    ❌: DBACL
+    ✅: Mode Fast (Default)
+    ✅: Mode Fast&DB
+    ✅: Mode Cache
+    ✅: Mode DB
+    ❌: Inheritance
+
+🛠️: ORMs Support
+    ✅: Prisma (Default)
+    ❌: TypeORM
+    ❌: Sequelize
 
 ```

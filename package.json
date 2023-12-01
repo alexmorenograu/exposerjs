@@ -11,7 +11,7 @@
         "ajv": "^8.12.0",
         "colors": "^1.4.0",
         "cors": "^2.8.5",
-        "exposerjs-orm-prisma": "^1.0.0",
+        "exposerjs-orm-prisma": "^1.0.1",
         "express": "^4.18.2",
         "jsonwebtoken": "^9.0.2",
         "pluralize": "^8.0.0"

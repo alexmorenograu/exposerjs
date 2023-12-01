@@ -5,6 +5,10 @@ v0.1.0 prepare for multiple orm version
     ✅: Feat: Create exposerjs-orm-prisma
     ✅: Feat: Prisma decoupling from the core
     ✅: Feat: Use exposerjs-orm-prisma by default
+    ✅: Feat: Config.aclType ['fast', 'fast&db', 'cache', 'db']
+    ✅: Fix: Parametizer
+    ↗️: Migrate: from 0.0.X to 0.1.0
+        ⚠️: exposer.run(app, PrismaInstance) → exposer.run(PrismaInstance, app | null)
 
 v0.0.10
     ✅: Feat: Express cease to be mandatory parameter
@@ -54,21 +58,19 @@ v0.0.1
 # Next versions
 
 ```
-v0.0.X
-🛠️: ACLs Validation
-    🛠️: CacheACL
+v0.X.X
+🛠️: Support Hooks
 
-v0.0.X
-🛠️: ACLs Validation
-    🛠️: DBACL
-
-v0.0.X
+v0.X.X
 🛠️: Add test environment
-    🛠️: Route customs
     🛠️: Token Validation
     🛠️: ACL Validation
+    🛠️: ACL Types
 
-v0.0.X
-🛠️: Deploy without express instance
+v0.X.X
+🛠️: Support TypeORM
+
+v0.X.X
+🛠️: Support Sequelize
 
 ```

@@ -2,6 +2,7 @@ import pluralize from 'pluralize';
 import validator from './util/validator.js';
 import parametizer from './util/parametizer.js';
 import { addAcls, aclCheck } from './acl/aclVerification.js';
+import { getAcls } from './acl/dbImport.js';
 
 import BAD_REQUEST from "./errors/badRequest.js";
 import INTERNAL_ERROR from "./errors/internalError.js";
@@ -35,6 +36,7 @@ async function customRoutes(app) {
 
             await app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
                 try {
+                    if (global.CONFIG.aclType == 'db') await getAcls({ exposer }, global.CONFIG);
                     const accessUser = req?.accessUser;
                     aclCheck(newMethod.model, method, accessUser?.role);
 

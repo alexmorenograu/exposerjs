@@ -16,5 +16,4 @@ export default {
         path: `/signUp`,
         verb: 'POST'
     },
-    signUp: global.ORM?.signUp
 }

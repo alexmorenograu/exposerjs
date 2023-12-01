@@ -11,14 +11,12 @@ import notFound from './src/middleware/notFound.js';
 import UserError from './src/errors/userError.js';
 import { addModel } from './src/acl/aclVerification.js';
 import tokenVerification from './src/middleware/tokenVerification.js';
+import useUser from './src/user/useUser.js';
+import useAcl from './src/acl/useAcl.js';
 
 //Express
 import express, { json, urlencoded } from 'express';
 import cors from 'cors';
-
-//User methods
-import signIn from './src/user/signIn.js';
-import signUp from './src/user/signUp.js';
 
 //Default ORM [Prisma]
 import { exporter } from 'exposerjs-orm-prisma';
@@ -43,14 +41,12 @@ async function run(prismaClient, app, userConfig) {
 
     await customRoutes(app);
     await modelsRoutes(app);
+    await useAcl();
 
-    // triggers BETA
-    //const exposer = hooks(prisma);
-
-    // NotFound middleware
+    //triggers BETA //const exposer = hooks(prisma);
     app.use(notFound);
 
-    console.log(`ExposerJS deployed in ${new Date() - st}s ⚡`.bgCyan);
+    console.log(`ExposerJS deployed in ${new Date() - st}ms ⚡`.bgCyan);
     if (!hasExpress) {
         return app.listen(global.CONFIG.port, () => {
             console.log(`BackEnd is listen at port ${global.CONFIG.port}`.bgGreen);
@@ -58,13 +54,6 @@ async function run(prismaClient, app, userConfig) {
         });
     }
 };
-
-function useUser() {
-    const methods = { signUp, signIn, tokenVerify: { model: 'user' } };
-    for (const method in methods)
-        use(Object.assign(methods[method], { [method]: global.ORM.user[method] }))
-}
-
 
 const exposer = { use, run, UserError }
 const acl = { addModel }
