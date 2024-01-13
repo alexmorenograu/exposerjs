@@ -9,6 +9,7 @@
 </p>
 <p align="center">
   <a href="https://npmjs.com/package/exposerjs"><img src="https://img.shields.io/npm/v/exposerjs.svg" alt="npm package"></a>
+  <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/exposerjs.svg" alt="node compatibility"></a>
 </p>
 <br/>
 
