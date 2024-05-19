@@ -1,6 +1,11 @@
 # Change Log
 
 ```
+v0.2.0 autoImport && run params
+    ✅: Feat: AutoImport config
+    ↗️: Migrate: from 0.1.X to 0.2.0
+        ⚠️: exposer.run(PrismaInstance, app || null, config) → exposer.run({PrismaInstance, app, config})
+
 v0.1.0 prepare for multiple orm version
     ✅: Feat: Create exposerjs-orm-prisma
     ✅: Feat: Prisma decoupling from the core

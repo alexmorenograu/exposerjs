@@ -1,28 +1,29 @@
 {
     "name": "exposerjs",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "main": "index.js",
     "description": "API generator",
     "author": "Alex Moreno",
     "type": "module",
     "license": "MIT",
+    "homepage": "https://exposerjs-docs.onrender.com/",
     "repository": "alexmorenograu/exposerjs",
     "engines": {
         "node": ">=18.0.0"
     },
     "dependencies": {
-        "ajv": "^8.12.0",
+        "ajv": "^8.13.0",
         "colors": "^1.4.0",
         "cors": "^2.8.5",
-        "exposerjs-orm-prisma": "^1.0.1",
-        "express": "^4.18.2",
+        "exposerjs-orm-prisma": "1.0.1",
+        "express": "^4.19.2",
         "jsonwebtoken": "^9.0.2",
         "pluralize": "^8.0.0"
     },
     "devDependencies": {
-        "@prisma/client": "^5.5.2",
+        "@prisma/client": "^5.14.0",
         "child_process": "^1.0.2",
-        "prisma": "^5.5.2"
+        "prisma": "^5.14.0"
     },
     "scripts": {
         "test": "node ./src/tests/index.js",

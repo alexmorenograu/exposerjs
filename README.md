@@ -27,3 +27,11 @@ Supported ORMs: [Prisma]
 ```bash
 $ npm i exposerjs
 ```
+
+## A quick look:
+
+```js
+import { exposer } from "exposerjs";
+import { PrismaClient } from "@prisma/client";
+exposer.run({PrismaClient});
+```
