@@ -1,7 +1,7 @@
 import { opendir, stat, realpath } from 'node:fs/promises';
 
 export default async (paths, getFile) => {
-    if (paths) return console.log('CRITICAL ERROR: add `paths` in autoImport config')
+    if (!paths) return console.log('CRITICAL ERROR: add `paths` in autoImport config')
     if (!getFile) getFile = (n) => n.includes('.js')
     if (!Array.isArray(paths)) paths = [paths]
 
