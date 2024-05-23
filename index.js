@@ -33,7 +33,12 @@ async function run({ config: userConfig, PrismaClient, app }) {
         const { paths, getFile } = userConfig.autoImport
         await autoImport(paths, getFile)
     }
-    if (notHasExpress) app = express()
+    if (notHasExpress) {
+        app = express()
+        app.use(cors());
+        app.use(json());
+        app.use(urlencoded({ extended: true }));
+    }
 
 
     useUser();
@@ -47,19 +52,11 @@ async function run({ config: userConfig, PrismaClient, app }) {
     app.use(notFound);
 
     console.log(`ExposerJS deployed in ${new Date() - st}ms ⚡`.bgCyan);
-    if (notHasExpress) return expressDeploy(app)
-};
-
-function expressDeploy(app) {
-    app.use(cors());
-    app.use(json());
-    app.use(urlencoded({ extended: true }));
-    return app.listen(global.CONFIG.port, () => {
+    if (notHasExpress) return app.listen(global.CONFIG.port, () => {
         console.log(`BackEnd is listen at port ${global.CONFIG.port}`.bgGreen);
         return app
     });
-}
-
+};
 
 const exposer = { use, run, UserError }
 const acl = { addModel }
