@@ -1,4 +1,4 @@
-import { opendir, stat, realpath } from 'node:fs/promises';
+import { readdir, stat, realpath } from 'node:fs/promises';
 
 export default async (paths, getFile) => {
     if (!paths) return console.log('CRITICAL ERROR: add `paths` in autoImport config')
@@ -11,9 +11,9 @@ export default async (paths, getFile) => {
 
 async function checkAndimport(path, getFile) {
     try {
-        const dir = await opendir(path);
+        const dir = await readdir(path);
         for await (const dirent of dir) {
-            const newPath = dirent.path + '/' + dirent.name
+            const newPath = path + '/' + dirent
             const stats = await stat(newPath)
             if (stats.isDirectory()) {
                 // if is folder, recursive
@@ -21,7 +21,7 @@ async function checkAndimport(path, getFile) {
                 continue
             }
 
-            if (getFile(dirent.name)) {
+            if (getFile(dirent)) {
                 // console.log('IMPORTING →', newPath)
                 await import(await realpath(newPath))
             }

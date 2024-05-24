@@ -1,6 +1,10 @@
 # Change Log
 
 ```
+v0.2.3 autoImport use readdir instead of opendir (fix node v18)
+v0.2.2 fix autoImport
+v0.2.1 fix autoImport
+
 v0.2.0 autoImport && run params
     ✅: Feat: AutoImport config
     ↗️: Migrate: from 0.1.X to 0.2.0
