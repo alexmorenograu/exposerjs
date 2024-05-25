@@ -2,16 +2,16 @@ import 'colors';
 
 ///ExposerJS
 import config from './config.js';
-import modelsRoutes from './src/modelRoutes.js';
-import { customRoutes, use, list } from './src/customRoutes.js';
-import hooks from './src/hooks.js';
+import modelsRoutes from './src/core/models.js';
+import { customRoutes, use, list } from './src/core/methods.js';
+import hooks from './src/core/hooks.js';
 
 //Middlewares
 import notFound from './src/middleware/notFound.js';
 import tokenVerification from './src/middleware/tokenVerification.js';
 
 import UserError from './src/errors/userError.js';
-import { addModel } from './src/acl/aclVerification.js';
+import { addModel, addAcls } from './src/acl/aclVerification.js';
 import autoImport from './src/util/autoImport.js';
 import useAcl from './src/acl/useAcl.js';
 import useUser from './src/user/useUser.js';
@@ -59,5 +59,5 @@ async function run({ config: userConfig, PrismaClient, app }) {
 };
 
 const exposer = { use, run, UserError }
-const acl = { addModel }
+const acl = { addModel, addAcls }
 export { exposer, acl };

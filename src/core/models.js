@@ -1,7 +1,5 @@
 import pluralize from 'pluralize';
-import parametizerModel from './util/parametizerModel.js';
-import { aclCheck } from './acl/aclVerification.js';
-import { getAcls } from './acl/dbImport.js';
+import handler from './handler.js';
 
 export default async (app) => {
     const verbs = global.CONFIG.verbs;
@@ -21,12 +19,10 @@ export default async (app) => {
                 }
 
                 // Deploy route models
-                await app[verb](path, async (req, res) => {
-                    if (global.CONFIG.aclType == 'db') await getAcls({ exposer }, global.CONFIG);
 
-                    aclCheck(model, method, req?.accessUser?.role);
-                    const params = parametizerModel(req, schema);
-                    res.send(await orm.models[model][method](params));
+                await app[verb](path, async (req, res) => {
+                    return await handler(req, res, model, method, schema,
+                        async (params) => await orm.models[model][method](params))
                 });
             }
         }
