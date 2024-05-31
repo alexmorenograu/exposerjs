@@ -1,11 +1,10 @@
 import pluralize from 'pluralize';
-import validator from './util/validator.js';
-import parametizer from './util/parametizer.js';
-import { addAcls, aclCheck } from './acl/aclVerification.js';
-import { getAcls } from './acl/dbImport.js';
+import validator from '../util/validator.js';
+import { addAcls } from '../acl/aclVerification.js';
 
-import BAD_REQUEST from "./errors/badRequest.js";
-import INTERNAL_ERROR from "./errors/internalError.js";
+import BAD_REQUEST from "../errors/badRequest.js";
+import INTERNAL_ERROR from "../errors/internalError.js";
+import handler from './handler.js';
 
 const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
 const list = {}
@@ -35,32 +34,23 @@ async function customRoutes(app) {
             const path = config.prefix + '/' + pluralize(newMethod.model) + newMethod.http.path ?? camelToSnakeCase(method)
 
             await app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
-                try {
-                    if (global.CONFIG.aclType == 'db') await getAcls({ exposer }, global.CONFIG);
-                    const accessUser = req?.accessUser;
-                    aclCheck(newMethod.model, method, accessUser?.role);
-
-                    const params = parametizer(req, newMethod.accepts);
-                    validator(params, newMethod.accepts, BAD_REQUEST);
-
-                    const response = await newMethod[method](
-                        {
-                            accessUser,
-                            exposer,
-                            req,
-                            res
-                        },
-                        ...Object.values(params)
-                    );
-                    validator(response, newMethod.returns, INTERNAL_ERROR);
-                    return res.send(response)
-                } catch (e) {
-                    console.log(e)
-                    if (e.statusCode)
-                        return res.status(e.statusCode).send(e);
-                    return res.status(500).send(INTERNAL_ERROR);
-                }
-
+                return await handler(req, res, newMethod.model, method, newMethod.accepts,
+                    async (params, accessUser) => {
+                        validator(params, newMethod.accepts, BAD_REQUEST);
+                        const response = await newMethod[method](
+                            {
+                                accessUser,
+                                exposer,
+                                req,
+                                res
+                            },
+                            ...Object.values(params)
+                        );
+                        validator(response, newMethod.returns, INTERNAL_ERROR);
+                        return response
+                    },
+                    exposer
+                )
             });
             // NOT WORK GLOBALY 
             //const prisma = new prismaClient();

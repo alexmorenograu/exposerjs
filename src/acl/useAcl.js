@@ -1,6 +1,6 @@
 import { getAclList } from './aclVerification.js';
 import { getAcls } from './dbImport.js';
-import { use, exposer } from '../customRoutes.js';
+import { use, exposer } from '../core/methods.js';
 let cachedAcls
 //Get acls from db when it starts
 export default async () => {

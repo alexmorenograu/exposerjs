@@ -1,9 +1,13 @@
 # Change Log
 
 ```
-v0.2.3 autoImport use readdir instead of opendir (fix node v18)
-v0.2.2 fix autoImport
-v0.2.1 fix autoImport
+v0.2.4 
+    🛠️: Fix: Models handled errors
+    📦: Refactor: Models and Methods use handler
+
+v0.2.3 📦 Refactor: autoImport use readdir instead of opendir (fix node v18)
+v0.2.2 🛠️ Fix: autoImport
+v0.2.1 🛠️ Fix: autoImport
 
 v0.2.0 autoImport && run params
     ✅: Feat: AutoImport config

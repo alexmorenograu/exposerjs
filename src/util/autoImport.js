@@ -12,7 +12,7 @@ export default async (paths, getFile) => {
 async function checkAndimport(path, getFile) {
     try {
         const dir = await readdir(path);
-        for await (const dirent of dir) {
+        for (const dirent of dir) {
             const newPath = path + '/' + dirent
             const stats = await stat(newPath)
             if (stats.isDirectory()) {

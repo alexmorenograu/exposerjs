@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { use, list, exposer } from '../customRoutes.js';
+import { use, list, exposer } from '../core/methods.js';
 import UNAUTHORIZED from '../errors/unauthorized.js';
 
 export default async (req, res, next) => {
