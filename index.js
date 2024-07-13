@@ -1,4 +1,5 @@
 import 'colors';
+import figlet from 'figlet';
 
 ///ExposerJS
 import config from './config.js';
@@ -51,9 +52,14 @@ async function run({ config: userConfig, PrismaClient, app }) {
     //triggers BETA //const exposer = hooks(prisma);
     app.use(notFound);
 
-    console.log(`ExposerJS deployed in ${new Date() - st}ms ⚡`.bgCyan);
+    console.log(figlet.textSync(`ExposerJS`, {
+        font: 'Small Slant',
+        horizontalLayout: 'universal  smushing',
+        verticalLayout: 'universal  smushing',
+    }));
+    console.log(`Deployed in ${new Date() - st}ms ⚡`.bgCyan);
     if (notHasExpress) return app.listen(global.CONFIG.port, () => {
-        console.log(`BackEnd is listen at port ${global.CONFIG.port}`.bgGreen);
+        console.log(`Listening at port ${global.CONFIG.port}`.bgGreen);
         return app
     });
 };
