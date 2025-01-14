@@ -1,4 +1,5 @@
 import UNAUTHORIZED from '../errors/unauthorized.js';
+import { roleCheck } from './inheritance.js';
 let aclList = new Map();
 
 function setAclList(newAclList) {
@@ -25,7 +26,11 @@ function aclCheck(model, name, role) {
 
     if (!role) throw UNAUTHORIZED
     if (method.has('*')) return
-    if (!method.has(role)) throw UNAUTHORIZED;
+
+    const roles = roleCheck(role);
+    const rolesSet = new Set(roles)
+    const allowed = Array.from(method).find(a => rolesSet.has(a))
+    if (!allowed) throw UNAUTHORIZED;
 }
 
 function addAcls(acls) {

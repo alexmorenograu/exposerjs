@@ -44,4 +44,9 @@ export default {
         name: "name",
         allow: "allow",
     },
+    inheritanceModel: {
+        tableName: "roleInheritance",
+        role: "role",
+        inherit: "inherit",
+    }
 };
