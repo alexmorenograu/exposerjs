@@ -1,6 +1,6 @@
 {
     "name": "exposerjs",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "main": "index.js",
     "description": "API generator",
     "author": "Alex Moreno",
@@ -19,7 +19,8 @@
         "express": "^4.19.2",
         "figlet": "^1.7.0",
         "jsonwebtoken": "^9.0.2",
-        "pluralize": "^8.0.0"
+        "pluralize": "^8.0.0",
+        "js-yaml": "^4.1.0"
     },
     "devDependencies": {
         "@prisma/client": "^5.16.2",

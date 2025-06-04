@@ -2,10 +2,9 @@ import 'colors';
 import figlet from 'figlet';
 
 ///ExposerJS
-import config from './config.js';
 import modelsRoutes from './src/core/models.js';
 import { customRoutes, use, list } from './src/core/methods.js';
-import hooks from './src/core/hooks.js';
+import getUserConfig from './src/core/getConfig.js';
 
 //Middlewares
 import notFound from './src/middleware/notFound.js';
@@ -24,14 +23,14 @@ import cors from 'cors';
 //Default ORM [Prisma]
 import { exporter } from 'exposerjs-orm-prisma';
 
-async function run({ config: userConfig, PrismaClient, app }) {
+async function run({ config, PrismaClient, app }) {
+    getUserConfig(config);
     const st = new Date();
     const notHasExpress = !app
-    global.CONFIG = Object.assign(config, userConfig);
     global.ORM = exporter(PrismaClient) //await
 
-    if (userConfig.autoImport) {
-        const { paths, getFile } = userConfig.autoImport
+    if (global.CONFIG.autoImport) {
+        const { paths, getFile } = global.CONFIG.autoImport
         await autoImport(paths, getFile)
     }
     if (notHasExpress) {
