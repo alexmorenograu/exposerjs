@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { use, list, exposer } from '../core/methods.js';
+import { use, list, exposer } from '../core/deploy/methods.js';
 import UNAUTHORIZED from '../errors/unauthorized.js';
 
 export default async (req, res, next) => {
@@ -15,7 +15,7 @@ export default async (req, res, next) => {
         req.accessUser = await exposer.user.tokenVerify({ exposer }, token)
     }
     catch (e) {
-        console.log(e, UNAUTHORIZED)
+        // console.log(e, UNAUTHORIZED)
         return res.status(UNAUTHORIZED.statusCode).send(UNAUTHORIZED);
     }
 

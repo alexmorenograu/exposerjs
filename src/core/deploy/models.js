@@ -1,7 +1,7 @@
 import pluralize from 'pluralize';
 import handler from './handler.js';
 
-export default async (app) => {
+export default async (createRoute) => {
     const verbs = global.CONFIG.verbs;
     const orm = global.ORM;
 
@@ -19,10 +19,12 @@ export default async (app) => {
                 }
 
                 // Deploy route models
-
-                await app[verb](path, async (req, res) => {
-                    return await handler(req, res, model, method, schema,
-                        async (params) => await orm.models[model][method](params))
+                await createRoute({
+                    verb, path, fn:
+                        async (req, res) => {
+                            return await handler(req, res, model, method, schema,
+                                async (params) => await orm.models[model][method](params))
+                        }
                 });
             }
         }
