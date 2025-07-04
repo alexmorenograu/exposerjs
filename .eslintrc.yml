@@ -1,0 +1,33 @@
+extends: [eslint:recommended, google]
+parserOptions:
+  ecmaVersion: 2024
+  sourceType: "module"
+rules:
+  require-jsdoc: 0
+  no-undef: 0
+  max-len: 0
+  eqeqeq: 0
+  operator-linebreak: 0
+  radix: 0
+  guard-for-in: 0
+  camelcase: 0
+  default-case: 0
+  no-eq-null: 0
+  no-console: 0
+  no-warning-comments: 0
+  no-empty: [error, allowEmptyCatch: true]
+  complexity: 0
+  max-depth: 0
+  comma-dangle: 0
+  bracketSpacing: 0
+  space-infix-ops: 1
+  no-invalid-this: 0
+  space-before-function-paren: [error, never]
+  prefer-const: 0
+  curly: [error, multi-or-nest]
+  indent: [error, 4]
+  arrow-parens: [error, as-needed]
+  no-multiple-empty-lines: ["error", { "max": 1, "maxEOF": 1 }]
+  space-in-parens: ["error", "never"]
+  arrow-spacing: ["error", { "before": true, "after": true }]
+  object-curly-spacing: ["error", "always"]

@@ -7,6 +7,10 @@ v0.3.0
     🕵️: Add inherence by code
     🕵️: Add gets in exposer-prisma
 
+v0.2.6 
+    ✅: Feat: Support yml file config
+v0.2.5 
+    🛠️: Fix: Parametizer
 v0.2.4 
     🛠️: Fix: Models handled errors
     📦: Refactor: Models and Methods use handler
