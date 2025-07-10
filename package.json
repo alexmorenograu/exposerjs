@@ -6,7 +6,7 @@
     "author": "Alex Moreno",
     "type": "module",
     "license": "MIT",
-    "homepage": "https://exposerjs-docs.onrender.com/",
+    "homepage": "https://exposerjs.alexmoreno.dev/",
     "repository": "alexmorenograu/exposerjs",
     "engines": {
         "node": ">=18.0.0"

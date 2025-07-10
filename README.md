@@ -3,8 +3,8 @@
 > API Generator Framework
 
 <p align="center">
-  <a href="https://exposerjs-docs.onrender.com" target="_blank" rel="noopener noreferrer">
-    <img width="180" src="https://exposerjs-docs.onrender.com/logo-s.png" alt="ExposerJS logo">
+  <a href="https://exposerjs.alexmoreno.dev" target="_blank" rel="noopener noreferrer">
+    <img width="180" src="https://exposerjs.alexmoreno.dev/logo-s.png" alt="ExposerJS logo">
   </a>
 </p>
 <p align="center">
@@ -13,7 +13,7 @@
 </p>
 <br/>
 
-## [Documentation 🔗](https://exposerjs-docs.onrender.com)
+## [Documentation 🔗](https://exposerjs.alexmoreno.dev)
 
 ExposerJS is an API generator based on Express and Prisma. It deploys a route for each Prisma method.
 It also allows you to add custom methods and deploy them in a simple way, providing everything you need.
