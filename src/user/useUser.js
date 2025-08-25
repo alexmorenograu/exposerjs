@@ -1,6 +1,6 @@
 import signIn from './signIn.js';
 import signUp from './signUp.js';
-import { use } from '../core/methods.js';
+import { use } from '../core/deploy/methods.js';
 
 export default () => {
     const methods = { signUp, signIn, tokenVerify: { model: 'user' } };

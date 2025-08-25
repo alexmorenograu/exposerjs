@@ -1,33 +1,40 @@
 import { readdir, stat, realpath } from 'node:fs/promises';
+import path from 'node:path';
 
-export default async (paths, getFile) => {
-    if (!paths) return console.log('CRITICAL ERROR: add `paths` in autoImport config')
-    if (!getFile) getFile = (n) => n.includes('.js')
-    if (!Array.isArray(paths)) paths = [paths]
+export default async function autoImport(paths, getFile) {
+    if (!paths)
+        return console.error('CRITICAL ERROR: add `paths` in autoImport config');
 
-    for (const path of paths)
-        await checkAndimport(path, getFile)
+    if (!getFile)
+        getFile = (name) => name.endsWith('.js');
+
+
+    if (!Array.isArray(paths))
+        paths = [paths];
+
+    await Promise.all(paths.map(p => processPath(p, getFile)));
 }
 
-async function checkAndimport(path, getFile) {
+async function processPath(currentPath, getFile) {
     try {
-        const dir = await readdir(path);
-        for (const dirent of dir) {
-            const newPath = path + '/' + dirent
-            const stats = await stat(newPath)
+        const entries = await readdir(currentPath);
+
+        const tasks = entries.map(async (entry) => {
+            const fullPath = path.join(currentPath, entry);
+            const stats = await stat(fullPath);
+
             if (stats.isDirectory()) {
-                // if is folder, recursive
-                await checkAndimport(newPath, getFile)
-                continue
+                return processPath(fullPath, getFile);
             }
 
-            if (getFile(dirent)) {
-                // console.log('IMPORTING →', newPath)
-                await import(await realpath(newPath))
+            if (getFile(entry)) {
+                const resolved = await realpath(fullPath);
+                return import(resolved);
             }
-        }
-    }
-    catch (err) {
-        console.log(err);
+        });
+
+        await Promise.all(tasks);
+    } catch (err) {
+        console.error(`Error processing ${currentPath}:`, err);
     }
 }

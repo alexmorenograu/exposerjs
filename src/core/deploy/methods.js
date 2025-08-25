@@ -1,16 +1,16 @@
 import pluralize from 'pluralize';
-import validator from '../util/validator.js';
-import { addAcls } from '../acl/aclVerification.js';
+import validator from '../../util/validator.js';
+import { addAcls } from '../../acl/aclVerification.js';
 
-import BAD_REQUEST from "../errors/badRequest.js";
-import INTERNAL_ERROR from "../errors/internalError.js";
+import BAD_REQUEST from "../../errors/badRequest.js";
+import INTERNAL_ERROR from "../../errors/internalError.js";
 import handler from './handler.js';
 
 const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
 const list = {}
 let exposer;
 
-async function customRoutes(app) {
+async function customRoutes(createRoute) {
     // Generate exposer proxy
     const config = global.CONFIG;
     exposer = new Proxy({}, {
@@ -33,30 +33,29 @@ async function customRoutes(app) {
             if (!newMethod.http) continue
             const path = config.prefix + '/' + pluralize(newMethod.model) + newMethod.http.path ?? camelToSnakeCase(method)
 
-            await app[newMethod.http.verb.toLowerCase()](path, async (req, res) => {
-                return await handler(req, res, newMethod.model, method, newMethod.accepts,
-                    async (params, accessUser) => {
-                        validator(params, newMethod.accepts, BAD_REQUEST);
-                        const response = await newMethod[method](
-                            {
-                                accessUser,
-                                exposer,
-                                req,
-                                res
-                            },
-                            ...Object.values(params)
-                        );
-                        validator(response, newMethod.returns, INTERNAL_ERROR);
-                        return response
-                    },
-                    exposer
-                )
-            });
-            // NOT WORK GLOBALY 
-            //const prisma = new prismaClient();
-            // https://www.prisma.io/docs/concepts/components/prisma-client/custom-models
-            // const myPrisma = prisma.$extends({ model: { [model]: { [method]: newMethod[method] } } })
-            // console.log(prisma.user.getUser({ prisma }))
+            await createRoute({
+                verb: newMethod.http.verb.toLowerCase(),
+                path,
+                fn: async (req, res) => {
+                    return await handler(req, res, newMethod.model, method, newMethod.accepts,
+                        async (params, accessUser) => {
+                            validator(params, newMethod.accepts, BAD_REQUEST);
+                            const response = await newMethod[method](
+                                {
+                                    accessUser,
+                                    exposer,
+                                    req,
+                                    res
+                                },
+                                ...Object.values(params)
+                            );
+                            validator(response, newMethod.returns, INTERNAL_ERROR);
+                            return response
+                        },
+                        exposer
+                    )
+                }
+            })
         }
     }
 }

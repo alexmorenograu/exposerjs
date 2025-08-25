@@ -1,8 +1,8 @@
-import { getAcls } from '../acl/dbImport.js';
-import { aclCheck } from '../acl/aclVerification.js';
-import parametizer from '../util/parametizer.js';
+import { getAcls } from '../../acl/dbImport.js';
+import { aclCheck } from '../../acl/aclVerification.js';
+import parametizer from '../../util/parametizer.js';
 
-import INTERNAL_ERROR from "../errors/internalError.js";
+import INTERNAL_ERROR from "../../errors/internalError.js";
 
 export default async (req, res, model, method, schema, fn, exposer) => {
     try {
@@ -15,7 +15,7 @@ export default async (req, res, model, method, schema, fn, exposer) => {
 
         return res.send(response)
     } catch (e) {
-        console.log(e)
+        // console.log(e)
         if (e.statusCode)
             return res.status(e.statusCode).send(e);
         return res.status(500).send(INTERNAL_ERROR);
